@@ -1,0 +1,16 @@
+'area: docs':
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.md']
+
+'area: ci':
+  - changed-files:
+      - any-glob-to-any-file: ['.github/workflows/**']
+
+'area: python':
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.py']
+
+'area: frontend':
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.{js,jsx,ts,tsx,css,scss}']
+

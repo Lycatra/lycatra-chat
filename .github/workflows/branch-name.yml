@@ -1,0 +1,16 @@
+name: branch-name-lint
+
+on:
+  pull_request:
+
+jobs:
+  branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        uses: deepakputhraya/action-branch-name@v1.2.0
+        with:
+          regex: '^(feat|fix|chore|docs|ci|refactor|perf|test)\/[a-z0-9._-]+$'
+          min_length: 8
+          max_length: 80
+

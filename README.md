@@ -76,6 +76,19 @@ backend that is easy to maintain. Users can interact through chat, getting eithe
 commands) or AI-curated answers (for natural language queries), and developers can iterate quickly with
 minimal fuss in the codebase or deployment.
 
+## Team workflow and getting started
+
+- **Branching**: Create a branch from `main` using `type/scope-short-description` (e.g., `feat/api-tools`, `fix/build-error`).
+- **Commits**: Use Conventional Commits (e.g., `feat(chat): add message send button`).
+- **Pull Requests**: Open PRs into `main`. Squash merge with a semantic title. At least one review required.
+- **Local checks**: Install and run pre-commit hooks:
+  - Windows PowerShell: `py -m pip install --upgrade pip pre-commit` then `pre-commit install` and `pre-commit run -a`.
+  - Alternatively: `pipx install pre-commit` (if using pipx).
+- **CI enforcement**: GitHub Actions run pre-commit, branch-name lint, semantic PR title check, super-linter, and stale triage.
+- **Issues/PR templates**: Use the provided templates when opening issues/PRs.
+- **Security**: Report vulnerabilities privately per `SECURITY.md`.
+
+
 ## Architecture and Components
 
 **High-Level Architecture:** The system is composed of a few key components that work together:

@@ -1,1 +1,31 @@
+* text=auto eol=lf
+
+# Ensure consistent line endings for common script types
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Treat these as text
+*.md text
+*.yml text
+*.yaml text
+*.json text
+*.xml text
+*.toml text
+*.cfg text
+*.ini text
+
+# Images and binaries as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+
 * text=auto\n
