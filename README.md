@@ -13,6 +13,10 @@ LLM, which will use the available **tools** (our server’s endpoints) to fetch 
 a friendly, summarized answer. This approach ensures that **non-command chat messages receive a
 helpful AI-generated response instead of raw JSON or database dumps**, improving usability.
 
+**Documentation quick links:**
+
+- [Deployment and Release Strategy](docs/DEPLOYMENT.md)
+
 **Key Objectives:**
 
 Minimal Dependencies: The project strives to use as few external libraries and services as possible.
@@ -40,19 +44,9 @@ call based on the user’s query, retrieve the data, and then format a natural l
 user.
 
 Fast Service Updates with Minimal Downtime: Lycatra-chat is intended to run in a service-oriented manner
-such that updates can be rolled out quickly without significant interruptions. We plan to achieve
-near zero-downtime deployments by using proven DevOps strategies. In practice, this could mean
-running multiple instances or containers and using a rolling update or blue-green deployment
-approach. Rolling updates gradually replace instances of the service one by one, ensuring the
-application remains available and allowing quick rollback if an issue is detected. Blue-green
-deployments maintain two environments (blue=current, green=new) and switch traffic to the new
-one only after it’s fully ready, thereby eliminating downtime during software updates – the
-cutover is just a quick routing switch. If a problem is discovered, traffic can swiftly be switched
-back to the old version, making rollback almost instantaneous. Initially, while running locally, we
-might simply restart the server quickly for updates (the service should start up in seconds). But as
-we evolve, we’ll incorporate these deployment techniques to meet the priority of minimal
-downtime and easy rollback. This will be especially important once we have multiple users
-relying on the service or when we deploy to a production environment.
+such that updates can be rolled out quickly without significant interruptions. See the
+[Deployment and Release Strategy](docs/DEPLOYMENT.md) for the phased rollout plan and operational
+checklists that support near-zero downtime.
 Easy Extensibility: The system should be straightforward for developers to extend with new
 capabilities. Adding a new API endpoint (which, in MCP terms, means adding a new tool or
 resource) should be a clear and simple process (see “Adding New Endpoints (Tools)” below for
