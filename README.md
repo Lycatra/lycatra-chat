@@ -435,23 +435,6 @@ Perform the operation: e.g., query the database for the given email. (We may hav
 for database interactions if applicable.)
 Formulate the result. Using MCP-Go, you might use mcp.NewToolResultText(resultString)
 to create a text result. Or manually, you’d craft a JSON-RPC response object with the result
-#### 1.
-
-#### 2.
-
-#### 3.
-
-#### 4.
-
-#### 5.
-
-#### 6.
-
-#### 7.
-
-#### 8.
-
-#### 9.
 
 content. Handle errors by either returning an error (which the library might convert into a proper
 error response) or by creating an error result (e.g., mcp.NewToolResultError("message")).
@@ -495,11 +478,7 @@ parse the JSON and see if method == "tools/call" and params.name ==
 handler functions to simplify this. It’s important that after adding a tool, it also appears in the output
 of tools/list. So if doing manually, add an entry to the list output. If using the library, it updates
 the list for us. The tools/list response includes each tool’s name, description, and input schema
-#### 10.
 
-#### 11.
-
-#### 12.
 
 , so verify that your new tool’s info is correctly reflected (the library will include it
 automatically if registered).
@@ -540,21 +519,6 @@ associated resources, and update the list output.
 As mentioned, one of Lycatra-chat’s priorities is enabling quick updates with minimal downtime. This section
 outlines how we manage deployments and rollbacks in practice.
 
-#### 13.
-
-#### 14.
-
-#### 15.
-
-#### 16.
-
-#### 17.
-
-#### 18.
-
-#### 19.
-
-#### 20.
 
 **Continuous Integration (CI):** We will set up a simple CI workflow (e.g., GitHub Actions or GitLab CI
 depending on our repo) that runs tests and builds the binary (for both Windows and Linux targets,
