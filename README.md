@@ -11,11 +11,10 @@ predefined command (for example, /list updates), the server returns the raw data
 appropriate endpoint. If the user instead asks a free-form question or request, the query is routed to an
 LLM, which will use the available **tools** (our server’s endpoints) to fetch or manipulate data and then return
 a friendly, summarized answer. This approach ensures that **non-command chat messages receive a
-helpful AI-generated response instead of raw JSON or database dumps** , improving usability.
+helpful AI-generated response instead of raw JSON or database dumps**, improving usability.
 
 **Key Objectives:**
 
-```
 Minimal Dependencies: The project strives to use as few external libraries and services as possible.
 Both Go and Rust are strong candidates for the implementation due to their performance and rich
 standard libraries, allowing us to build a web/API server without heavy frameworks. Go’s standard
@@ -25,11 +24,9 @@ library like Hyper to avoid full-stack frameworks – as one developer noted, �
 build an application like this without much incidental complexity”. By sticking close to the standard
 libraries (or minimal well-vetted libraries), we reduce bloat, simplify the build, and make the system
 easier to maintain.
-```
-```
 LLM Integration via Tools: Rather than the LLM having unrestricted access or being tightly coupled,
 the server will expose a set of tools (endpoints) that the LLM can invoke to get data or perform
-actions. This concept follows the emerging Model Context Protocol (MCP) , which “allows servers to
+actions. This concept follows the emerging Model Context Protocol (MCP), which “allows servers to
 expose tools that can be invoked by language models”. Think of it as an API designed for AI: MCP
 servers can expose data through Resources (analogous to GET endpoints) and functionality
 through Tools (analogous to POST endpoints) specifically for LLM use. The LLM, acting as an
@@ -41,14 +38,7 @@ model or agent that understands MCP or a similar JSON-RPC tool syntax can intera
 seamlessly. This enables dynamic, AI-driven use of the endpoints – the LLM can decide which tool to
 call based on the user’s query, retrieve the data, and then format a natural language answer for the
 user.
-```
-#### • 1 2 • 3 4
 
-```
-5 6
-```
-
-```
 Fast Service Updates with Minimal Downtime: Lycatra-chat is intended to run in a service-oriented manner
 such that updates can be rolled out quickly without significant interruptions. We plan to achieve
 near zero-downtime deployments by using proven DevOps strategies. In practice, this could mean
@@ -63,18 +53,14 @@ might simply restart the server quickly for updates (the service should start up
 we evolve, we’ll incorporate these deployment techniques to meet the priority of minimal
 downtime and easy rollback. This will be especially important once we have multiple users
 relying on the service or when we deploy to a production environment.
-```
-```
 Easy Extensibility: The system should be straightforward for developers to extend with new
 capabilities. Adding a new API endpoint (which, in MCP terms, means adding a new tool or
-resource ) should be a clear and simple process (see “Adding New Endpoints (Tools)” below for
+resource) should be a clear and simple process (see “Adding New Endpoints (Tools)” below for
 documentation). This ensures the project can grow to cover more functionalities as needed, without
 requiring a complete overhaul. We will provide guidelines for creating new endpoints so that any
 developer on the team can implement additional features in a consistent manner. Each new tool will
 automatically become accessible to the LLM agent as well, meaning the AI assistant’s knowledge and
 abilities grow alongside our endpoint library.
-```
-```
 Local-First and Self-Hosted: In the initial phase, all components will run on local servers or local
 containers. We are avoiding external cloud dependencies to maintain control and privacy. The
 current setup already includes a local Matrix Synapse server (running in a Docker container) for chat,
@@ -85,8 +71,7 @@ a dedicated Talos Linux server (which will run Kubernetes on Docker) once it’s
 more scalable and robust infrastructure (this is covered in the TODO / Future Work section). Talos is
 an ultra-minimal, secure OS designed specifically for containers/K8s, which should make our
 deployment consistent and reliable when we migrate to it.
-```
-In summary, Lycatra-chat aims to provide a **conversational interface to your services and data** , using a lean
+In summary, Lycatra-chat aims to provide a **conversational interface to your services and data**, using a lean
 backend that is easy to maintain. Users can interact through chat, getting either direct data (for explicit
 commands) or AI-curated answers (for natural language queries), and developers can iterate quickly with
 minimal fuss in the codebase or deployment.
@@ -99,26 +84,6 @@ minimal fuss in the codebase or deployment.
 that exposes various endpoints (tools/resources) and follows a JSON-based protocol that an AI agent
 can use. We’ll implement this server in either Go or Rust (to be decided, see **Tech Stack** below),
 
-#### •
-
-```
-7 8
-```
-```
-9
-10
-```
-```
-11
-```
-#### •
-
-#### •
-
-#### •
-
-
-```
 focusing on simplicity and speed. The server’s responsibilities include: hosting HTTP routes or RPC
 methods for each tool, executing the corresponding logic (e.g., querying a database or performing a
 computation), and returning results in a structured format. If we adhere to the Model Context
@@ -130,9 +95,8 @@ utilize an open-source library for MCP to save time (for example, MCP-Go if we u
 equivalent in Rust), but we will keep any such library usage minimal. Notably, the tools we define
 can either fetch data (like reading from a file or database, calling an external API, etc.) or perform
 actions (like triggering a service restart, toggling a feature, etc.), depending on project needs.
-Initially, an example tool will be list_updates , which might gather information about recent
+Initially, an example tool will be list_updates, which might gather information about recent
 service updates or changes and return them. Over time we’ll add more tools as required.
-```
 **2. The LLM Agent:** The intelligence layer is provided by a Large Language Model. This could be an
 external API (like OpenAI GPT-4) or a local model (running via something like OpenAI’s text-
 generation-webui, ollama, or another local inference engine). The key is that the LLM is
@@ -166,27 +130,11 @@ bot SDK to listen for messages and respond. Since our Synapse is running in a co
 setup), the bot can run externally and connect via HTTP API. There are existing examples of such
 integrations – for instance, a simple Matrix bot can take messages from a room and send them to an
 
-```
-5 6
-```
-#### •
-
-```
-12
-```
-#### •
-
-```
-13
-```
-
-```
 AI API and then reply, as demonstrated by projects like the matrix-llm-bot (which “redirects messages
-from rooms to an LLM via API” ). We will document how to set up our bot user and configure it to
+from rooms to an LLM via API”). We will document how to set up our bot user and configure it to
 point at the Lycatra-chat server’s API. This way, when a user chats with the bot in Matrix, they are
-effectively interacting with the Lycatra-chat server , getting either direct data (for commands) or AI-
+effectively interacting with the Lycatra-chat server, getting either direct data (for commands) or AI-
 generated answers (for natural language), depending on their input.
-```
 **4. Data Stores / Services:** (Optional, depends on features) Lycatra-chat might interface with various data
 sources. For example, if one tool needs to retrieve system metrics or database records, the server
 will need access to those. Initially, we can keep things simple with local files or in-memory data for
@@ -223,22 +171,12 @@ understanding requests and presenting results. The interface between them (MCP/J
 standardized, which means we could even swap out the LLM or the tool implementations independently in
 the future.
 
-```
-14
-```
-#### •
-
-```
-11
-```
-
 ## Tech Stack and Dependencies
 
 **Programming Language:** _To Be Decided – Go or Rust._ Both Go and Rust are modern, efficient languages
 with strong support for systems programming and web services, and importantly, both can produce a
 single static binary for easy deployment. We outline the pros of each to help in final selection:
 
-```
 Go – Pros: Very simple learning curve, especially if developers are new to it. It has an excellent
 standard library for HTTP servers and JSON, meaning we can avoid adding frameworks. As noted,
 the net/http package in Go is sufficient for a solid web API; “Go’s standard library (net/http)
@@ -249,20 +187,17 @@ Compilation is fast, and cross-compiling for Linux (for eventual Talos deploymen
 dev machine is trivial. The team’s familiarity with Python/JavaScript will find Go’s syntax and garbage-
 collected model quite approachable. Also, Go’s binary can be small (a few tens of MB) and has no
 runtime dependencies – just run the binary. One potential library we might consider is the MCP-Go
-library , which can save us time by providing out-of-the-box support for the Model Context
+library, which can save us time by providing out-of-the-box support for the Model Context
 Protocol (tool registration, JSON-RPC handling, etc.). Using it would slightly increase dependencies,
 but it is well-maintained and geared exactly towards our use case, allowing us to “focus on building
 great tools” while it handles protocol details. Even with that, the overall dependency footprint
 remains small (MCP-Go itself is primarily a wrapper around standard net/http and JSON encoding
 under the hood).
-```
-```
 Rust – Pros: High performance and memory safety. Rust’s package ecosystem (Cargo) makes it easy
 to include only what we need. We can build a web server with minimal crates – for example, use
 hyper (a low-level async HTTP library) instead of a full framework. This aligns with the “no heavy
 framework” ethos: one Rust tutorial follows the rule “if the crate calls itself a framework, don’t use it”,
 and demonstrates that using Hyper plus a few small utility crates is enough to build a web API
-```
 . Hyper gives us full control and is very fast. Rust’s strong type system can help catch errors early,
 which is beneficial as the project grows. The downside is that Rust has a steeper learning curve, and
 development might be a bit slower at first. However, the team can gain experience in a systems
@@ -283,24 +218,6 @@ needs). Both languages align with our **no heavy runtime** requirement (no JVM, 
 produce small, efficient services. Ultimately, we should choose one to avoid fragmenting the codebase. For
 now, we will proceed assuming Go for examples (since it’s likely faster to implement initially), but will note
 
-#### •
-
-```
-1
-```
-```
-15
-```
-```
-15
-```
-#### •
-
-```
-16
-17
-```
-
 where adjustments might be needed for Rust. **Either way, the architecture and high-level design remain
 the same.**
 
@@ -314,7 +231,7 @@ request router and validator). The library can also manage some advanced feature
 streaming, etc.) which we might leverage later. - Matrix bot: For the Matrix integration, we can use the
 Matrix Client-Server REST API directly (via simple HTTP calls, which keeps dependencies low – just use net/
 http or Rust’s Reqwest to hit the endpoints). Alternatively, there are lightweight Matrix client libraries for
-both Go (mautrix-go) and Rust (ruma or the mentioned headjack used in Chaz ). Using an HTTP
+both Go (mautrix-go) and Rust (ruma or the mentioned headjack used in Chaz). Using an HTTP
 client might actually be simplest: we can have a small Go routine or Rust async task long-poll (sync) or
 WebSocket (if using Matrix’s newer push) for new messages. Given that Synapse is local, network latency is
 minimal. For sending, it’s just an HTTP POST to the _matrix/client/v3/rooms/<roomId>/send
@@ -331,7 +248,6 @@ For now, local development can just use the host filesystem for any needed stora
 
 **Summary of Chosen Stack (to be confirmed):**
 
-```
 Language: Go 1.21+ (preferred for quick start) or Rust 1.72+ (if we commit to the Rust route).
 Platform: Linux containers for deployment (but develop on Windows/Mac is fine). We will
 containerize the service to run on Docker since eventual target is Talos/K8s. During development,
@@ -345,23 +261,6 @@ structure the LLM agent as a separate module that can call either an external AP
 process).
 Chat Interface: Matrix (Synapse) with a bot user. Already running Synapse in Docker; we will just
 add our bot. No additional chat server needed – reuse what’s in place for simplicity.
-```
-```
-15
-```
-```
-18
-```
-#### •
-
-#### •
-
-#### •
-
-#### •
-
-#### •
-
 
 ## Development Setup and Running the Project
 
@@ -370,7 +269,6 @@ get the project up and running. Below are instructions for setting up and runnin
 
 ### Prerequisites
 
-```
 Go or Rust Toolchain: Depending on the chosen language, install either Go (https://go.dev/dl/) or
 Rust (https://rustup.rs/). Both are cross-platform and easy to install. Ensure your PATH is set for the
 toolchain. For Go, verify by running go version; for Rust, rustc --version and cargo --
@@ -382,12 +280,10 @@ Docker, having Docker allows you to run Lycatra-chat in a container as well, or 
 other services using something like Docker Compose. It’s not strictly required for coding or unit
 testing, but it will be for integration testing (especially before deploying to Talos). Ensure Docker
 Desktop or Docker Engine is installed if you plan to use it.
-```
 ### Project Structure
 
 After cloning, the repository structure will look something like:
 
-```
 Lycatra-chat-project/
 ├── cmd/ # Application entry points
 │ └── Lycatra-chat/ # Main Lycatra-chat server binary source
@@ -402,19 +298,11 @@ Lycatra-chat-project/
 others (dev/test only)
 ├── README.md # (This document) project documentation
 ├── DESIGN.md # Additional design notes (if needed)
-└── ... (other docs or config files, e.g., .env.example for environment
+└──... (other docs or config files, e.g.,.env.example for environment
 variables)
-```
 _(Note: This is a proposed structure. In Go, we typically separate cmd/ for binaries and pkg/ or internal/
 for libraries. In Rust, everything is under src/ by default, but we can achieve a similar organization with
 modules. We will adapt to language conventions accordingly.)_
-
-#### •
-
-#### •
-
-#### •
-
 
 Key files initially: - **main.go / main.rs:** The entry point that starts the HTTP server, registers tools, and
 begins listening for requests. - **Tools implementation:** Could be individual files for each tool (e.g., tools/
@@ -431,12 +319,12 @@ reduce complexity of each component.
 
 ### Running in Development
 
-**1. Configuration:** First, copy or create a configuration file if needed (e.g., .env or a config.yaml). At
+**1. Configuration:** First, copy or create a configuration file if needed (e.g.,.env or a config.yaml). At
 minimum, you may need to provide: - **Matrix Bot Credentials:** The homeserver URL (e.g., [http://](http://)
 localhost:8008 for local Synapse), the bot user ID (@Lycatra-chat:yourdomain), and access token or
 login/password. This allows the bot to connect to Matrix. - **LLM API Key or Endpoint:** If using OpenAI, set
     OPENAI_API_KEY. If using a local LLM, specify the endpoint (e.g., [http://localhost:4000/api](http://localhost:4000/api) for
-OpenWebUI, etc.). We will not commit secrets to the repo; instead, use environment variables or a .env
+OpenWebUI, etc.). We will not commit secrets to the repo; instead, use environment variables or a.env
 file that is gitignored. - Optionally, any other service credentials if a tool needs it (not in initial version). - For
 now, defaults can be coded (e.g., assume Matrix on localhost, etc.), so config may be optional.
 **2. Launch Supporting Services:** Ensure the Matrix Synapse server is running (if you have Docker, docker
@@ -444,7 +332,7 @@ ps to see if the synapse container is up, or start it via docker-compose up syna
 file). Also launch any LLM local server if needed (for example, if using an Ollama or other model server, start
 it). If using OpenAI API, no local process needed, just internet access.
 **3. Run Lycatra-chat Server (Development Mode):** - **Using Go:** Navigate to the project directory and run go
-run ./cmd/Lycatra-chat (this compiles and runs the server). You should see logs indicating the server has
+run./cmd/Lycatra-chat (this compiles and runs the server). You should see logs indicating the server has
 started, e.g., “Server starting on [http://localhost:8080”](http://localhost:8080”) (the default port can be 8080 or configurable). - If
 you want to test the MCP interface manually, you can use curl or a tool like httpie to hit the
 endpoints. For example, to list tools: curl -X POST -H "Content-Type: application/json" -d
@@ -461,15 +349,11 @@ on how we implement routing – details will be in the documentation/comments of
 case, the server by default runs in a single-process, single-instance mode. It’s fine for dev. If you make
 changes to code, just stop (Ctrl+C) and rerun the command to see changes. Because we’re not using hot-
 
-```
-19
-```
-
 reload frameworks (keeping things simple), you need to rebuild to apply changes. Both Go and Rust
 compile quickly for our project size (fractions of a second to a couple seconds).
 
 **4. Run Matrix Bot (if separate):** If we implement the Matrix bot as a separate program, you would run it
-similarly: - Possibly go run ./cmd/matrixbot or cargo run --bin matrixbot. This should start a
+similarly: - Possibly go run./cmd/matrixbot or cargo run --bin matrixbot. This should start a
 process that connects to the Matrix homeserver and begins listening for messages (likely using the Matrix
 sync API). - Ensure the bot is invited to the room or knows which room to monitor. In a simple setup, we
 might have the bot auto-join a specific room or listen to its DM. - Then try sending messages in Matrix: e.g.,
@@ -478,7 +362,7 @@ greeting or ask a question. The bot process logs should show it received a messa
 Lycatra-chat server, and you should soon see a reply. For a command, try /list updates in the chat – the bot
 should catch the command (perhaps by pattern or because Matrix clients don’t send it to the bot if it’s a
 command? We might need to configure how to capture commands; possibly just treat everything as a
-message and decide in our code if it starts with / ). - In case of issues, check the bot logs for errors (auth
+message and decide in our code if it starts with /). - In case of issues, check the bot logs for errors (auth
 issues, etc.), and also the Lycatra-chat server logs (to see if it received the request or if the LLM call failed, etc.).
 **5. Testing the LLM Calls:** If the LLM integration is configured, test a query that triggers it. For instance, ask
 the bot in chat: “Could you list the recent updates in a summary?” This should result in the LLM being
@@ -486,14 +370,14 @@ invoked. If using OpenAI, ensure the API key is correct and observe if the assis
 summary containing real data. If using a local LLM, ensure that service is running and that Lycatra-chat’s LLM
 module can reach it (maybe check by calling the local LLM API directly once).
 
-Throughout development, you can run unit tests if available (go test ./... or cargo test) which we
+Throughout development, you can run unit tests if available (go test./... or cargo test) which we
 will write for critical components (especially the tool handlers logic). We will also create some integration
 tests for the JSON interface.
 
 **Developer Convenience:** The environment is kept simple intentionally: - No database that you need to set
 up for basic functionality (unless your feature requires one – and if so, we’ll likely use SQLite or similar for
 ease). - The services can all run on localhost with default configs. We will supply example config values for
-things like the Matrix bot in a .env.example file. - A Docker Compose configuration will be provided to
+things like the Matrix bot in a.env.example file. - A Docker Compose configuration will be provided to
 launch the whole stack (Synapse, Lycatra-chat, possibly a local LLM container if we have one). This is useful for
 end-to-end testing. For daily dev, you might just run Lycatra-chat directly and rely on an already-running
 Synapse container. - We avoid any proprietary IDE requirements or heavy build scripts – just standard Go or
@@ -507,7 +391,6 @@ on behalf of the LLM. The separation in development is: implement all tools and 
 API; then separately implement how the LLM will call them (either through our code or by relying on the
 LLM’s abilities if it has built-in support for tool usage).
 
-
 ## Adding New Endpoints (Tools)
 
 One of the design requirements is making it easy to extend Lycatra-chat with new functionality. This section
@@ -517,13 +400,12 @@ exposing them to both direct users and the LLM.
 When asking for new features, we (or the product team) will often describe them in terms of high-level
 actions or queries. As a developer, your task is to map those requests to one or more tools. A tool typically
 corresponds to a single well-defined operation or query. For example, if the new feature is _"Allow the
-assistant to fetch user account details by email"_ , you might create a tool called get_user_by_email that
+assistant to fetch user account details by email"_, you might create a tool called get_user_by_email that
 takes an email address and returns the user’s info from the database.
 
 **Steps to Add a New Tool:**
 
-```
-Design the Tool Interface: Decide on the tool’s name , description, and input/output schema.
+Design the Tool Interface: Decide on the tool’s name, description, and input/output schema.
 The name should be a short identifier (e.g., "get_user_by_email", "restart_service", etc.).
 Use snake_case and keep it alphanumeric. This name is what the LLM will use to invoke the tool.
 Write a brief description of what the tool does. This helps both documentation and the LLM (some
@@ -534,24 +416,18 @@ MCP library, you’ll use functions to specify these (e.g., mcp.WithString("emai
 mcp.Required(), mcp.Description("User email address")) in Go). If writing manually,
 document the expected JSON structure for the call (e.g., { "name": "get_user_by_email",
 "arguments": { "email": "<string>" } }).
-```
-```
 Determine the output format. In many cases, our tools will return text or JSON data that the LLM
 can parse. According to MCP, a tool result is typically either some text content or structured data.
 Often, returning a human-readable text (maybe a short summary or list) is useful because the LLM
 can directly forward that as an answer if needed. However, if the LLM is expected to interpret the
 result, structured data (JSON) could be returned and the LLM will incorporate it. For now, returning a
 text blob (or markdown) is simplest unless the use case demands structured output.
-```
-```
 Implement the Tool Logic: This involves writing a function that performs the desired action. For
 example, in Go, you might create a function func handleGetUserByEmail(ctx
 context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) (following
 the signature expected by the MCP-Go library), or if not using the library, you’d implement it inside
 the HTTP handler case for that method. In Rust, similarly, you’d write an async function to handle it.
 Within this function, do the following:
-```
-```
 Parse and validate input parameters from the request. (The library provides helpers like
 req.RequireString("email") which returns the string or an error if missing. Without the
 library, you’d manually extract from JSON.)
@@ -559,7 +435,6 @@ Perform the operation: e.g., query the database for the given email. (We may hav
 for database interactions if applicable.)
 Formulate the result. Using MCP-Go, you might use mcp.NewToolResultText(resultString)
 to create a text result. Or manually, you’d craft a JSON-RPC response object with the result
-```
 #### 1.
 
 #### 2.
@@ -574,29 +449,17 @@ to create a text result. Or manually, you’d craft a JSON-RPC response object w
 
 #### 7.
 
-```
-20
-```
 #### 8.
 
 #### 9.
 
-```
-20
-```
-
-```
 content. Handle errors by either returning an error (which the library might convert into a proper
 error response) or by creating an error result (e.g., mcp.NewToolResultError("message")).
 Ensure thread-safety and performance considerations: If the tool might be called concurrently, make
 sure to avoid global state mutations without locks, etc. Usually, reading operations are fine. If a tool
 writes to something, consider synchronizing or queueing as needed (out of scope for many read-
 only tools).
-```
-```
 Example (Pseudo-code in Go):
-```
-```
 tool:= mcp.NewTool("get_user_by_email",
 mcp.WithDescription("Lookup user details by email"),
 mcp.WithString("email", mcp.Required(),mcp.Description("Email address
@@ -620,14 +483,10 @@ info:= fmt.Sprintf("User %s: %s, plan=%s", user.ID, user.Name,
 user.Plan)
 return mcp.NewToolResultText(info),nil
 })
-```
-```
 This snippet (illustrative) registers the tool on the server s. The handler fetches a user and returns
 a text summary. The MCP library handles wiring this into the JSON-RPC response. If we weren’t using
 the library, we’d achieve something similar by manually checking the RPC method name in a handler
 function.
-```
-```
 Register the Tool with the Server: If using the library, as shown above, you call AddTool on the
 server instance to add your new tool and its handler. If not using a library, you’ll need to add a case
 in your request routing logic. For instance, if we have an HTTP endpoint for /mcp, inside it we
@@ -636,50 +495,36 @@ parse the JSON and see if method == "tools/call" and params.name ==
 handler functions to simplify this. It’s important that after adding a tool, it also appears in the output
 of tools/list. So if doing manually, add an entry to the list output. If using the library, it updates
 the list for us. The tools/list response includes each tool’s name, description, and input schema
-```
 #### 10.
 
 #### 11.
 
 #### 12.
 
-
-```
 , so verify that your new tool’s info is correctly reflected (the library will include it
 automatically if registered).
-```
-```
 Document the Tool (for the team): Update the project documentation (could be this README or a
 separate TOOLS.md file) with the details of the new endpoint. Include:
-```
-```
 Name and description (so others know it exists).
 Example usage (maybe a sample JSON request and response).
-```
-```
 Any special considerations (e.g., “this tool requires an API key set in config” or “this tool will modify
 database state, use with caution”). This helps other developers and also helps when writing prompts
 for the LLM (the LLM’s system prompt or instructions might include a brief of available tools).
-```
-```
 Testing the New Tool: Write unit tests for the tool’s logic if possible. For instance, test that
 get_user_by_email returns the expected result for a known user, and an appropriate message
 for an unknown email. You can call the handler function directly in tests (bypassing full server). Also
 test error conditions (invalid input). Then test integration:
-```
-```
 Start the server and try a tools/list to ensure your tool is listed.
 Try a direct tools/call via curl or HTTP client to see it working end-to-end.
 If the Matrix bot/LLM is running, try asking the assistant to use it (for example: “Do we have an
 account under the email alice@example.com?”) and see if it triggers the tool (you might check server
 logs to confirm the tool was called) and returns a correct answer. Adjust as needed (sometimes you
 might need to tweak the tool’s output format to be more LLM-friendly).
-```
 By following the above steps, adding new capabilities is relatively straightforward. The architecture’s
 separation means you usually don’t have to touch the LLM code or the bot code at all – just add the new
 tool on the server side. As soon as it’s available, the LLM can discover it and use it. (If using OpenAI function
 calling, you might need to update the functions JSON you pass, but if using an MCP-aware agent, it will
-fetch tools automatically via tools/list due to our declared capabilities .)
+fetch tools automatically via tools/list due to our declared capabilities.)
 
 **Important:** Maintain **consistency** and **security** : - Keep naming and parameter conventions uniform (e.g.,
 use lower_snake_case for JSON fields, provide clear descriptions). - Do not expose dangerous system calls as
@@ -695,9 +540,6 @@ associated resources, and update the list output.
 As mentioned, one of Lycatra-chat’s priorities is enabling quick updates with minimal downtime. This section
 outlines how we manage deployments and rollbacks in practice.
 
-```
-21 22
-```
 #### 13.
 
 #### 14.
@@ -714,10 +556,6 @@ outlines how we manage deployments and rollbacks in practice.
 
 #### 20.
 
-```
-23
-```
-
 **Continuous Integration (CI):** We will set up a simple CI workflow (e.g., GitHub Actions or GitLab CI
 depending on our repo) that runs tests and builds the binary (for both Windows and Linux targets,
 possibly). This ensures that any new commit is verifiably building and passing tests.
@@ -730,7 +568,7 @@ referenced in logs or status commands.
 with Docker), deploying a new version might be as simple as building the new Docker image and restarting
 the container: - We will have a Dockerfile that produces an image of the Lycatra-chat service. For example, a
 multi-stage Dockerfile that compiles the Go binary and then copies it into a scratch or alpine base for
-minimal image size. - To update, we build the image (docker build -t Lycatra-chat:<tag> .) and then
+minimal image size. - To update, we build the image (docker build -t Lycatra-chat:<tag>.) and then
 update the Docker Compose file or Docker CLI to use the new image. If using Compose, we might just do
 docker-compose down && docker-compose up -d to recreate the container with the new image. This
 will incur a few seconds of downtime (while the container restarts). We can minimize this by instead doing a
@@ -764,19 +602,6 @@ request hit during a pod restart (which K8s mitigates via readiness checks and n
 until it’s ready). - **Rollback:** Kubernetes makes rollback easy – we can keep an older ReplicaSet and just scale
 it up or use kubectl rollout undo to go back to a previous version if needed. Our CI could also
 maintain images with tags like prod-previous to quickly re-deploy the last version.
-
-```
-24 25
-```
-```
-7
-```
-```
-9
-```
-```
-10
-```
 
 **State Management:** Lycatra-chat is largely stateless (especially in the HTTP layer). It should not keep significant
 in-memory state that can’t be rederived, except maybe caches. This statelessness is key to quick restarts
@@ -821,33 +646,17 @@ the ambiguity so the team can focus on one. If Rust is chosen, allocate time for
 training.
 **2. Implement Initial Tool Set:** Begin with a minimal but useful set of tools. For example:
 
-```
 list_updates – as discussed, fetches recent changes. Implementation: maybe read from a
 CHANGELOG file or a Wiki API.
-```
-```
-11
-```
-#### •
 
-#### •
-
-#### •
-
-
-```
 get_service_status – checks if dependent services are up (could ping an endpoint or check
 docker container status).
 help – returns a help message or list of commands (the LLM likely doesn’t need this, but for direct
 command users).
-```
-```
 Todo: Define and implement these initial tools. Ensure they are well-tested.
-```
 **3. LLM Integration Layer:** Right now, the design assumes the LLM can call our tools. We need to
 implement that connection:
 
-```
 For OpenAI: Use the function calling API. We’d provide the OpenAI model a list of functions (tools)
 with their schemas on each conversation. There’s some development to format our tool list into the
 OpenAI function format. Todo: Write a module that given our tool definitions produces the JSON to
@@ -856,15 +665,11 @@ result to the model).
 For local model: Possibly set up an agent using LangChain or similar. Or use an MCP client – if there’s
 an open-source agent that speaks MCP, we could use that to interface with local models. This might
 require more R&D. In the interim, using OpenAI as a reliable baseline is fine.
-```
-```
 Todo: Implement a simple LLMAgent class (or Go equivalent) that can take a user message and
 return a response by coordinating with the LLM. Start with OpenAI for simplicity (since our focus is
 not to train a model but to use one). Later, swap or add local model support.
-```
 **4. Matrix Bot Integration:** Set up the Matrix bot user for Lycatra-chat:
 
-```
 Register a new user on Synapse (or use an existing one, but better to have a dedicated bot account,
 e.g., username "Lycatra-chat").
 Develop the bot logic as per Architecture section. Could be in Go or Rust or even Python, but to
@@ -873,15 +678,11 @@ server binary) is preferred.
 Test in a private room. Then potentially expose in a public room for internal users.
 Todo: Write the Matrix bot connector. Ensure it handles basic commands and messages correctly.
 Possibly use a small existing library if it saves time (but if not, raw HTTP calls are fine).
-```
-```
 In the future, consider bridging to other chat platforms as well (but Matrix covers a lot and can
 bridge to Slack, etc., if needed).
-```
 **5. Deploy on Talos/K8s:** Once the new Talos Linux server is ready (this will provide our Kubernetes
 cluster on a Docker setup), we will containerize and deploy Lycatra-chat to it:
 
-```
 Write Kubernetes manifests: Deployment, Service, ConfigMap/Secrets (for API keys).
 Possibly use Helm or Kustomize for easier maintenance.
 Ensure the Matrix bot can run in-cluster or access the Matrix server (which might remain on the
@@ -890,32 +691,22 @@ This will significantly reduce downtime on updates due to the rolling update fea
 also sets the stage for scaling out if needed.
 Todo: Setup CI to build/push Docker images. Deploy to Talos cluster in a dev namespace for testing.
 Eventually cut over production usage to the Talos-hosted instance.
-```
-#### • • • • • • • • • • • • • • • • • • •
 
-
-```
 We will treat the current Docker on Windows as a dev environment and Talos/K8s as staging/prod
 environment.
-```
 **6. Performance Tuning & Load Testing:** As we add features, we should ensure the system remains
 fast. The use of Go/Rust is already a plus for performance. We should test the latency of tool calls
 and LLM responses.
 
-```
 If local LLMs are too slow, consider adding caching for repeated queries or using faster model
 inference (maybe switch to a smaller model for quick answers).
 Monitor resource usage. The MCP approach allows parallel calls, but we might restrict concurrency if
 the LLM or database can’t handle too many at once.
-```
-```
 Todo: Create a few benchmark scenarios (like 10 concurrent users asking for something) and
 measure response times. Optimize if needed (for example, use persistent connections, adjust
 threadpool, etc.).
-```
 **7. Additional Tools & Features:** After the initial version is stable, we can expand capabilities:
 
-```
 More data-oriented tools (integration with project management APIs, status pages, etc. – whatever is
 useful for our context).
 Tools that modify state (e.g., /restart service X tool to restart a Docker container). These need
@@ -926,58 +717,30 @@ calls in a conversation). We should test and possibly build prompt templates for
 User-specific contexts: In the future, if multiple users use the assistant, we might give different
 permissions. MCP has a notion of sessions and per-session tools. We might later utilize that
 if needed (e.g., an admin user has a deploy_tool, others do not).
-```
-```
 Todo: Gather feedback from initial users (our team) on what other tasks would be helpful to
 automate via this assistant, and implement accordingly.
-```
 **8. Documentation & Knowledge Base:** Keep improving documentation.
 
-```
 This README should be kept up-to-date with any architectural changes.
 Possibly maintain a changelog of new tools or changes for quick reference.
 Write usage guides for end users if we ever expose it beyond dev team.
-```
-```
 If we integrate a lot of domain knowledge, consider adding a resources/ tool for LLM (MCP’s
 resource concept) to load reference docs into context. For example, the assistant could have
 access to a “docs://README” resource (which contains this README content) to answer questions
 about the system itself.
-```
 **9. Resilience and Error Handling:** As a future improvement, implement more robust error handling:
 
-```
 If the LLM produces an invalid tool call, handle gracefully (perhaps send an apology message or a
 clarification request).
-```
-#### • • • • • • • • • •
 
-```
-26 27
-```
-#### • • • • • •
-
-```
-28
-```
-#### •
-
-#### •
-
-
-```
 If a tool fails (exception, timeout), the system should catch it and inform the user in a friendly way,
 rather than crash or hang.
 Use timeouts for tool calls so an unresponsive service doesn’t hang the whole chat response
 indefinitely.
-```
-```
 Todo: Implement middleware or wrappers for tool calls to enforce timeouts and catch panics (if in
 Go). The MCP spec and library encourage such safety measures.
-```
 **10. Security Audit:** Before any broader deployment, review security:
 
-```
 Ensure the API is not exposed to the public internet without auth (for now, our API might listen on
 localhost or a private network. Eventually, if exposing, use authentication/authorization).
 Lock down the Matrix bot’s capabilities (it should probably ignore messages not meant for it, etc.,
@@ -986,7 +749,6 @@ Since Talos is hardened, that helps on OS level. But also consider network polic
 in K8s.
 Todo: Possibly implement an auth token for the MCP API if needed (so only the bot/LLM can call it,
 not random users). However, since everything is internal, it’s low risk at the moment.
-```
 By addressing these TODOs over time, we will move from a basic working prototype to a robust,
 production-ready AI assistant platform. The overarching theme is **keep it simple** at each step – add
 functionality gradually without overcomplicating the design or introducing unnecessary dependencies.
