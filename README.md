@@ -76,6 +76,12 @@ backend that is easy to maintain. Users can interact through chat, getting eithe
 commands) or AI-curated answers (for natural language queries), and developers can iterate quickly with
 minimal fuss in the codebase or deployment.
 
+See also:
+- docs/QUICKSTART.md
+- docs/ARCHITECTURE.md
+- docs/OPERATIONS.md
+- docs/RFC-001-matrix-docker-updates.md
+
 ## Team workflow and getting started
 
 - **Branching**: Create a branch from `main` using `type/scope-short-description` (e.g., `feat/api-tools`, `fix/build-error`).
