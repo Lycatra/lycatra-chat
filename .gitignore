@@ -1,0 +1,43 @@
+# OS
+.DS_Store
+Thumbs.db
+$RECYCLE.BIN/
+*.tmp
+*.swp
+
+# Node
+node_modules/
+.npm/
+pm-debug.log*
+yarn-error.log*
+
+# Go
+bin/
+*.exe
+*.test
+*.out
+**/*.coverprofile
+**/coverage.txt
+
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Python (if tools/scripts)
+__pycache__/
+*.pyc
+.venv/
+
+# Editors
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+logs/
+*.log
+
+# Env
+.env
+.env.*
